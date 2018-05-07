@@ -1,0 +1,63 @@
+{
+  "data": {
+    "dir": ".\/data\/FB15k-237\/",
+    "trainFile": "train.txt",
+    "testFile": "test.txt",
+    "validFile": "valid.txt",
+    "limit": -1, // limit of training data to read, default: -1 (no limit)
+    "loadMappings": false, // whether to load a dumped mappings from file, default: false
+    "ignoreNewConstituents": true, // only entities and relations that occur in the train set will be used, others will be discarded; default: true
+    "location": "./data/mappings", // location of dumped mappings
+    "dumpMappings": true, // whether to dump mappings, default: true
+    "dumpLocation": "./data/mappings" // location to dump mappings to
+  },
+  "optimizer": {
+    "type": "pair", // pair, softmax, or logistic, default: pair
+    "batchSize": 32, // number of positive triples in each batch
+    "maxEpochs": 0,
+    "trainOnValidation": false, // whether to include validation data in training, default: false
+    "testOnValidation": false, // whether to evaluate on validation (true) or test (false) data, used by grid search; default false
+    "sampling": {
+      "type": "lcwa", // LCWA or corruption, default: lcwa
+      "numberOfRetries": 10, // maximum number of retries when sampling a negative triple; default: 10
+      "numberOfNegatives": 1, // number of negatives per positive triple; default: 1
+      "mode": "random" // random (randomly choose between corrupting subject or object), subject (corrupt only subjects), object (corrupt only objects), both (corrupt both, subjects and objects); default: random
+    },
+    "earlyStopping": {
+      "useEarlyStopping": true, // default: true
+      "everyNEpochs": 50, // run evaluation on validation data every n epochs (costly), default: 50
+      "n": 5000 // sample n triples to estimate performance, -1 means use all, default: 1000
+    }
+  },
+  "model": {
+    "type": "TransE", // ComplEx, DISTMULT, TransE or RESCAL
+    "hyperParameters": { // hyper parameters that define a model
+      "k": 100, // embedding dimension
+      "margin": 1, // margin hyper parameter for pair-wise margin based training
+      "useL1": true, // TransE: whether to use L1 (true) or L2 (false) norm
+      "normalizeEntities": true, // normalize entities after each batch to have unit norm; default: false
+      "normalizeRelations": false, // normalize relations after each batch to have unit norm; default: false
+      "lambda_e": 0.01, // L2 regularization of entities; default: 0.0
+      "lambda_r": 0.01 // L2 regularization of relations; default: 0.0
+    },
+    "initializer": {
+      "type": "normal", // type of initializer, xavier, normal, uniform, or pretrained; default xavier
+      "location": "path/to/model", // when using pretrained: location where to load embedddings from
+      "mean": 0.0, // when using normal; default: 0.0
+      "var": 1.0, // when using normal; default: 1.0
+      "low": -0.1, // when using uniform; default: -0.1
+      "high": 0.1 // when using uniform; default: 0.1
+    },
+    "update": {
+      "type": "adagrad", // sgd, rmsprop, adadelta or adagrad, default: sgd
+      "alpha": 0.1, // initial learning rate for RMSProp, AdaGrad and SGD
+      "delta": 1e-7, // RMSProp, AdaGrad and AdaDelta numerical stability; default: 1e-7
+      "rho": 0.9 // AdaDelta, RMSProp decay constant
+    },
+    "serialization": {
+      "dumpLocation": "auto", // location to dump model to, "auto" dumps to <dumpDirectory>/<model>-<date-time>, default: auto
+      "dumpDirectory": "auto" // directory to dump model to, "auto" dumps to ./models, useful for grid search; default: auto
+    }
+  },
+  "checkGradients": false // if true, the gradients of the model will be validated, default: false
+}

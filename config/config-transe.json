@@ -1,0 +1,44 @@
+{
+  "data":
+  {
+    "dir": ".\/data\/FB15k-237\/",
+    "trainFile": "train.txt",
+    "testFile": "test.txt",
+    "validFile": "valid.txt"
+  },
+  "optimizer":
+  {
+    "type": "pair",
+    "batchSize": 2722,
+    "maxEpochs": 1000,
+    "sampling": {
+      "type": "lcwa",
+      "numberOfNegatives": 10,
+      "mode": "random"
+    },
+    "earlyStopping": {
+      "useEarlyStopping": false
+    }
+  },
+  "model": {
+    "type": "TransE",
+    "hyperParameters": {
+      "k": 150,
+      "normalizeEntities": true,
+      "margin": 2,
+      "useL1": true
+    },
+    "initializer": {
+      "type": "normal"
+    },
+    "update": {
+      "type": "adagrad",
+      "alpha": 0.05,
+      "delta": 1e-7
+    },
+    "serialization": {
+      "dumpLocation": "auto",
+      "dumpDirectory": "auto"
+    }
+  }
+}
